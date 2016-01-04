@@ -1,70 +1,18 @@
-======================================
-ungapatchka: a python package template
-======================================
-
-ungapatchka
-    Yiddish word that describes the overly ornate, busy,
-    ridiculously over-decorated, and garnished to the point of
-    distaste. (www.urbandictionary.com/define.php?term=ungapatchka)
-
-.. contents:: Table of Contents
-
-why?
-====
-
-* Provides a basic package framework including a CLI using
-  ``argparse`` that divides functionality into subcommands (à la git,
-  apt-get, etc)
-* The CLI entry point imports the local version of the python package
-  when it is invoked using an absolute or relative path (see below).
-* Provides some useful utilities, for example ``utils.Opener`` as a
-  replacement for ``argparse.FileType``
-
-dependencies
-============
-
-* Python 2.7.x
-* Tested on Linux and OS X.
+=================================================================
+a demo for building static html reports with Jinja2 and Bootstrap
+=================================================================
 
 installation
 ============
 
-Clone the project from the git repository to create a new project. You
-will need to choose a name for the project (let's say "myproject"),
-and for the main script ("runme")::
+This is just a demo, most easily run locally::
 
-  git clone https://github.com/nhoffman/ungapatchka.git myproject
-  cd myproject && dev/setup.sh myproject runme
-
-Kaopw! A new project with a new git repo::
-
-  % git --no-pager log -n 1
-  commit 418307aa88c9733c5e72c1ecff63729d1239c1cc
-  Author: Noah Hoffman <noah.hoffman@gmail.com>
-  Date:   Tue Sep 30 21:45:43 2014 -0700
-
-      first commit
-  % ./runme.py --version
-  0.1.0
-
-You'll need to have ``setuptools`` for installation::
-
-  python setup.py install
-
-or use ``pip``::
-
-  pip install .
-
-Subsequent (re)installation with pip should be performed using the
-``-U`` option::
-
-  pip install -U .
-
-There's a handy script for bootstrapping a virtualenv (that is, if a
-recent version of virtualenv is not available, the source code is
-downloaded)::
-
-  dev/venv.py
+  git clone ...
+  cd static_html_demo
+  virtualenv shd-env
+  source shd-env/bin/activate
+  pip install -r requirements.txt
+  ./shd.py -h
 
 
 architecture
@@ -74,51 +22,27 @@ This project has the following subdirectories:
 
 * ``dev`` - development tools not essential for the primary functionality of the application.
 * ``doc`` - files related to project documentation.
-* ``ungapatchka`` - the Python package implementing most of the project functionality. This subdirectory is installed to the system.
+* ``static_html_demo`` - the Python package implementing most of the project functionality.
 * ``testfiles`` - files and data used for testing.
 * ``tests`` - subpackage implementing unit tests.
-
-Note that ``kapow.py`` and ``ungapatchka`` are placeholder names that
-are replaced with your script and project names during setup.
 
 execution
 =========
 
-The ``kapow`` script provides the user interface, and uses standard
+The ``shd.py`` script provides the user interface, and uses standard
 UNIX command line syntax. Note that for development, it is convenient
-to run ``kapow`` from within the project directory by specifying the
+to run this script from within the project directory by specifying the
 relative path to the script::
 
-    % cd ungapatchka
-    % ./kapow.py --help
+    % ./shd.py --help
 
-or::
-
-   % path/to/ungapatchka/kapow.py --help
-
-When invoked this way, the local version of the package is imported,
-even if the version of the package is installed to the system. This is
-very handy for development, and can avoid the requirement for a
-virtualenv in many cases.
-
-When the package is installed, an entry point is placed in the 'bin'
-directory corresponding to the python environment you used for
-installation (so if you installed using ``/usr/local/bin/python``, the
-script will be named ``/usr/local/bin/kapow``).
-
-Commands are constructed as follows. Every command starts with the
-name of the script, followed by an "action" followed by a series of
-required or optional "arguments". The name of the script, the action,
-and options and their arguments are entered on the command line
-separated by spaces. Help text is available for both the ``kapow``
-script and individual actions using the ``-h`` or ``--help`` options.
 
 versions
 ========
 
 The package version is defined using ``git describe --tags --dirty``
 (see http://git-scm.com/docs/git-describe for details).  The version
-information is updated and saved in the file ``ungapatchka/data/ver``
+information is updated and saved in the file ``/data/ver/static_html_demo``
 when ``setup.py`` is run (on installation, or even by executing
 ``python setup.py -h``). Run ``python setup.py check_version`` to make
 sure that the stored version matches the output of ``git
@@ -146,7 +70,7 @@ class, or method within the ``tests`` package using dot notation::
 license
 =======
 
-Copyright (c) 2014 Noah Hoffman
+Copyright (c) 2016 Noah Hoffman
 
 Released under the MIT License:
 

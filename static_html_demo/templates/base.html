@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang=en>
+  <head>
+    <meta charset=utf-8>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link href="{{ bootstrap_css }}" rel="stylesheet" media="screen">
+
+    <script type='text/javascript'>
+      $(document).ready(function () {
+          if ($("[rel=tooltip]").length) {
+          $("[rel=tooltip]").tooltip();
+          }
+          });
+    </script>
+
+      </head>
+      <body>
+        <div class="panel-heading">
+          <div class="container">
+            <div class="pull-right">
+              <small><i>{{ timestamp }}</i></small>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <h1>{{ title }}</h1>
+          <p>
+          {% for url, label in navigation %}
+          <a href="{{ url }}">{{ label }}</a>
+          {% if not loop.last %} &raquo; {% endif %}
+          {% endfor %}
+          </p>
+          {% block content %}{% endblock %}
+          <div id="push"></div>
+        </div>
+
+
+        <div class='panel-footer'>
+          <div class="container">
+            <center><small>
+                {% for name, version in footers.iteritems() %}
+                {{name}} <b>{{version}}</b>
+                {% if not loop.last %}
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% endif %}
+                {% endfor %}
+            </small></center>
+          </div>
+
+          {% for js_file in js_files %}
+          <script src="{{ js_file }}"></script>
+          {% endfor %}
+
+          <!-- http://stackoverflow.com/questions/9446318/bootstrap-tooltips-not-working -->
+          <!-- https://www.mail-archive.com/twitter-bootstrap@googlegroups.com/msg01190.html -->
+          <script>
+            $(function() {
+              // Handler for .ready() called.
+              $('.field-tips').popover({html: true});
+            });
+          </script>
+        </div>
+
+      </body>
+    </html>
