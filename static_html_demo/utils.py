@@ -1,11 +1,18 @@
 import os
-import bz2
 import gzip
 import logging
 import shutil
 import sys
+from datetime import datetime
+
+try:
+    from bz2 import BZ2File
+except ImportError, err:
+    BZ2File = lambda x, *args, **kwargs: sys.exit(err)
 
 from os import path
+
+from static_html_demo import package_data
 
 log = logging.getLogger(__name__)
 
@@ -45,36 +52,54 @@ def mkdir(dirpath, clobber=False):
 
 
 class Opener(object):
-    """Factory for creating file objects
+    """Factory for creating file objects. Transparenty opens compressed
+    files for reading or writing based on suffix (.gz and .bz2 only).
 
-    Keyword Arguments:
-    - mode -- A string indicating how the file is to be opened. Accepts the
-      same values as the builtin open() function.
-    - bufsize -- The file's desired buffer size. Accepts the same values as
-      the builtin open() function.
+    Example::
+
+        with Opener()('in.txt') as infile, Opener('w')('out.gz') as outfile:
+            outfile.write(infile.read())
     """
 
-    def __init__(self, mode='r', bufsize=-1):
-        self._mode = mode
-        self._bufsize = bufsize
+    def __init__(self, *args, **kwargs):
+        self.args = args
+        self.kwargs = kwargs
+        self.writable = 'w' in kwargs.get('mode', args[0] if args else 'r')
 
-    def __call__(self, string):
-        if string is sys.stdout or string is sys.stdin:
-            return string
-        elif string == '-':
-            return sys.stdin if 'r' in self._mode else sys.stdout
-        elif string.endswith('.bz2'):
-            return bz2.BZ2File(string, self._mode, self._bufsize)
-        elif string.endswith('.gz'):
-            return gzip.open(string, self._mode, self._bufsize)
+    def __call__(self, obj):
+        if obj is sys.stdout or obj is sys.stdin:
+            return obj
+        elif obj == '-':
+            return sys.stdout if self.writable else sys.stdin
         else:
-            return open(string, self._mode, self._bufsize)
-
-    def __repr__(self):
-        args = self._mode, self._bufsize
-        args_str = ', '.join(repr(arg) for arg in args if arg != -1)
-        return '{}({})'.format(type(self).__name__, args_str)
+            __, suffix = obj.rsplit('.', 1)
+            opener = {'bz2': BZ2File,
+                      'gz': gzip.open}.get(suffix, open)
+            return opener(obj, *self.args, **self.kwargs)
 
 
-def opener(pth, mode='r', bufsize=-1):
-    return Opener(mode, bufsize)(pth)
+def make_local_copy(outdir, subdir, fname):
+    """Copy fname from package data to outdir/subdir (creating dir if
+    necessary), and return the path to the copy of fname relative to
+    outdir.
+
+    """
+
+    destdir = path.join(outdir, subdir)
+    mkdir(destdir)
+    shutil.copyfile(package_data(fname), path.join(destdir, fname))
+    return path.join(subdir, fname)
+
+
+def include_file(outdir, fname):
+    mkdir(outdir)
+    dest = path.join(outdir, path.basename(fname))
+    shutil.copyfile(fname, dest)
+    return path.join(path.basename(outdir), path.basename(fname))
+
+
+def timestamp_now():
+    """
+    Produce a string with date and time information for a report
+    """
+    return datetime.now().strftime("%A, %B %d, %Y, %I:%M %p")

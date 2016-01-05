@@ -1,4 +1,45 @@
 {% extends "base.html" %}
 {% block content %}
 
+  <h2>Some Text</h2>
+
+  <p>{{ text }}</p>
+
+  <h2>A Table</h2>
+
+  {% if table %}
+    <table class="table table-condensed table-striped table-hover">
+      <tr>
+	{% for col in table.next() %}
+	  <th>{{ col }}</th>
+	{% endfor %}
+      </tr>
+      {% for row in table %}
+	<tr>
+	  {% for col in row %}
+	    <th>{{ col }}</th>
+	  {% endfor %}
+	</tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+
+  <h2>Some Images</h2>
+
+  {# a grid of images with ncol columns #}
+  {% set colspan = 12 / ncol %}
+
+  <p>Images are arranged in {{ ncol }} columns.</p>
+
+  {% if images %}
+    <div class="row">
+      {% for image in images %}
+	<div class="col-md-{{ colspan | int }}">
+	  <img src="{{ image }}" alt="{{ image }}" width="100%"/>
+	</div>
+	{% if loop.index % ncol == 0 %}</div><div class="row">{% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
 {% endblock %}

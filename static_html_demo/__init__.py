@@ -1,7 +1,5 @@
 """
-Package description (in static_html_demo/__init__.py)
-
-Update me!
+Demo project for creating static html pages using Bootstrap and Jinja2
 """
 
 import glob

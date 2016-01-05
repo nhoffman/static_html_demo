@@ -1,0 +1,14 @@
+name,abbreviation,census_region_name,census_division_name
+Alaska,AK,West,Pacific
+Arizona,AZ,West,Mountain
+California,CA,West,Pacific
+Colorado,CO,West,Mountain
+Hawaii,HI,West,Pacific
+Idaho,ID,West,Mountain
+Montana,MT,West,Mountain
+Nevada,NV,West,Mountain
+New Mexico,NM,West,Mountain
+Oregon,OR,West,Pacific
+Utah,UT,West,Mountain
+Washington,WA,West,Pacific
+Wyoming,WY,West,Mountain
