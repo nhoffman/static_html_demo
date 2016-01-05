@@ -1,0 +1,129 @@
+#+TITLE: Generating static html reports with Jinja2 and Bootstrap
+#+AUTHOR: Noah Hoffman
+#+OPTIONS: toc:nil ^:nil
+
+Compile me:
+
+: ~/.emacs.d/org-export/org-export html --infile static_html_demo.org --outfile static_html_demo.html --bootstrap --embed-css --evaluate
+
+* Motivation
+
+- formatted output
+- hierarchical structure
+- hyperlinks!
+- embedded images
+- annotated output
+- multiple media targets (screen, print[fn:1])
+
+* Components
+
+- [[http://jinja.pocoo.org][Jinja2]] (templating)
+- [[http://getbootstrap.com][Bootstrap]] (css framework)
+- organized as a python package
+
+* Package structure
+
+#+BEGIN_SRC sh :results output :exports results
+tree -F -I '*.pyc|shd-env|report' ./static_html_demo
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+./static_html_demo
+|-- __init__.py
+|-- __main__.py
+|-- data/
+|   |-- bootstrap.css
+|   |-- bootstrap.js
+|   |-- jquery-1.11.2.min.js
+|   `-- ver
+|-- scripts/
+|   |-- __init__.py
+|   `-- main.py
+|-- subcommands/
+|   |-- __init__.py
+|   `-- render.py
+|-- templates/
+|   |-- base.html
+|   `-- index.html
+`-- utils.py
+
+4 directories, 13 files
+#+end_example
+
+* examples
+
+** CLI entry point
+
+#+BEGIN_SRC sh :results output :exports both
+./shd.py -h
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+usage: shd.py [-h] [-V] [-v] [-q] [--logfile FILE] {help,render} ...
+
+Demo project for creating static html pages using Bootstrap and Jinja2
+
+optional arguments:
+  -h, --help      show this help message and exit
+  -V, --version   Print the version number and exit
+  -v, --verbose   Increase verbosity of screen output (eg, -v is verbose, -vv
+                  more so)
+  -q, --quiet     Suppress output
+  --logfile FILE  Write logging messages to FILE [default stderr]
+
+actions:
+  {help,render}
+    help          Detailed help for actions using `help <action>`
+    render        Create the index page.
+#+end_example
+
+** 'render' subcommand
+
+#+BEGIN_SRC sh :results output :exports both
+./shd.py render -h
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+usage: shd.py render [-h] [-d OUTDIR] [--title TITLE] [--text TEXT]
+                     [--table TABLE] [--img [IMG [IMG ...]]] [--ncol NCOL]
+                     [--reps REPS]
+
+Create the index page.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d OUTDIR, --outdir OUTDIR
+                        output directory for html [./report]
+  --title TITLE         Title string for index.html (default: name of cwd)
+  --text TEXT           Some text to display [testfiles/lorem.txt]
+  --table TABLE         A table in csv format [testfiles/western_states.csv]
+  --img [IMG [IMG ...]]
+                        path to one or more images
+  --ncol NCOL           number of columns for arranging images [4]
+  --reps REPS           times to repeat sequence of images [1]
+#+end_example
+
+** generate the report
+
+#+BEGIN_SRC sh :results output :exports both
+./shd.py render --title "example report" --img testfiles/*{.jpg,.png}
+#+END_SRC
+
+#+BEGIN_SRC sh :results output :exports both
+tree -F ./report
+#+END_SRC
+
+...and here it is! [[file:report/index.html]]
+
+* Example projects
+
+- https://bitbucket.org/uwlabmed/markergene_pipeline
+- https://bitbucket.org/uwlabmed/genomic_strain_typing_pipeline
+
+* Footnotes
+
+[fn:1] Check out http://wkhtmltopdf.org
+

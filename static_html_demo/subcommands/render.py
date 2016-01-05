@@ -33,6 +33,8 @@ def build_parser(parser):
     parser.add_argument('--img', nargs='*', help='path to one or more images')
     parser.add_argument('--ncol', type=int, default=4,
                         help='number of columns for arranging images [%(default)s]')
+    parser.add_argument('--reps', type=int, default=1,
+                        help='times to repeat sequence of images [%(default)s]')
 
 
 def action(args):
@@ -53,7 +55,7 @@ def action(args):
     table = csv.reader(args.table)
     # has the side effect of copying files into place
     images = [include_file(path.join(outdir, 'img'), img)
-              for img in args.img] if args.img else None
+              for img in args.img] * args.reps if args.img else None
 
     env = Environment(loader=PackageLoader('static_html_demo', 'templates'))
     # env.globals = globals()

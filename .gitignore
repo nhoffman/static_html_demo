@@ -8,3 +8,4 @@ dist
 *-env
 *.egg-info
 /report/
+/static_html_demo.html
